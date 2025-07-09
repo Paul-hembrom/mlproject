@@ -47,7 +47,40 @@ class ModelTrainer:
                 "Adaboost Regressor":AdaBoostRegressor(),
             }
 
-            model_report:dict=evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models)
+            #  Define hyperparameters for GridSearchCV
+            params = {
+                "Random Forest": {
+                    "n_estimators": [100, 200],
+                    "max_depth": [6, 10, None]
+                },
+                "Decision Tree": {
+                    "max_depth": [3, 5, 10],
+                    "criterion": ["squared_error", "friedman_mse"]
+                },
+                "Linear Regression": {},  # No tuning
+                "Gradient Boosting": {
+                    "n_estimators": [100, 150],
+                    "learning_rate": [0.05, 0.1]
+                },
+                "K-neighbors Regressor": {
+                    "n_neighbors": [3, 5, 7]
+                },
+                "XGBRegressor": {
+                    "n_estimators": [100, 150],
+                    "learning_rate": [0.05, 0.1],
+                    "max_depth": [3, 5]
+                },
+                "Catboosting Regressor": {
+                    "iterations": [100, 200],
+                    "learning_rate": [0.05, 0.1]
+                },
+                "Adaboost Regressor": {
+                    "n_estimators": [50, 100],
+                    "learning_rate": [0.05, 0.1]
+                },
+            }
+
+            model_report:dict=evaluate_models(X_train=X_train, y_train=y_train, X_test=X_test, y_test=y_test, models=models, param=params)
 
             # to get the best model score from dict
             best_model_score = max(sorted(model_report.values()))
